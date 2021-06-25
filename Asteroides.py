@@ -177,7 +177,7 @@ while not game.gameOver:
 
 
 
-#Estado del juego
+#Estado del juego PENDIENTES
     #Los meteoros cambian el target porque creo un nuevo player(ARREGLAR)
     #Vida (Arreglar) Las vidas siguen siendo 3 porque al crear un nuevo jugador se resetean
     #Niveles
