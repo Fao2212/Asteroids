@@ -35,6 +35,13 @@ class Jugador(pygame.sprite.Sprite):
     def getPos(self):
         return pygame.Vector2(self.rect.x,self.rect.y)
 
+    def reaparecer(self):
+        self.surface = pygame.Surface((30, 30))
+        self.original = self.surface
+        self.rect = pygame.draw.polygon(self.surface, (255,0,0), ((0, 30), (15, 0), (30, 30)))
+        self.front = self.getFront()
+        self.alive = True
+
     def moverse(self):#Aumenta la pos con el frente(direccion) y con la velocidad
         if self.alive:
             pressed_keys = pygame.key.get_pressed()

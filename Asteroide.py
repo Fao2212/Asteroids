@@ -43,3 +43,5 @@ class Asteroide(pygame.sprite.Sprite): #Collider pendiente
 
     def setPos(self,vector):
         self.pos = vector
+
+    

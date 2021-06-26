@@ -51,6 +51,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 #Clase que controla el juego
 class GameManager:
     def __init__(self):
+        self.jugador = Jugador()
         self.asteroides = pygame.sprite.Group()
         self.jugadores = pygame.sprite.Group()
         self.text = pygame.sprite.Group()
@@ -59,26 +60,34 @@ class GameManager:
         self.secondPassed = False
         self.currentLevel = 0
         self.gameOver = False
+        self.asteroidsSpawning = 2
         self.tiempoDeSpawn = 4
+        self.asteroidsPerLevel = 10
+        self.spawnedAsteroids = 0
         self.pause = False
         self.addPlayer()
         self.createText()    
 
     def addPlayer(self):
-        self.jugador = Jugador()
         self.jugador.setPos(WIDTH/2,HEIGHT/2)
+        self.jugador.reaparecer()
         self.jugadores.add(self.jugador)
 
     def playerDied(self):
         if not self.jugador.alive:
-            print("Dead")
             if self.jugador.lives > 0:
-                print("Lives left")
                 self.addPlayer()
             else:
                 game.gameOver = False
-                print("Game Over")
             
+    def increaseLevel(self):
+        self.asteroidsSpawning += 1
+        self.currentLevel +=1
+        if self.currentLevel % 5 == 0:  #If level == 5 then spawnTime decrease
+            self.tiempoDeSpawn -= 1
+        if self.currentLevel % 3 == 0:
+            self.asteroidsPerLevel += 1
+        self.spawnedAsteroids = 0
 
     def countAsteroides(self):
         return len(self.asteroides)
@@ -99,10 +108,13 @@ class GameManager:
             return Vector2(WIDTH,random.randint(0, HEIGHT))
 
     def crearAsteroides(self,cantidad):
+        if self.spawnedAsteroids+cantidad > self.asteroidsPerLevel:
+            cantidad = self.asteroidsPerLevel-self.spawnedAsteroids
         for i in range(cantidad):
             ast = Asteroide(self.jugador)   #Si luego se quieren mas jugaores, podria seguir al vivo mas cercano
             ast.setPos(self.getRandomPos())
             self.asteroides.add(ast)
+            self.spawnedAsteroids += 1
 
     def checkLimiteJugadores(self):
         for sprite in self.jugadores:
@@ -170,20 +182,23 @@ while not game.gameOver:
     pygame.display.update()
     #Tiempo
     game.setSecond()
-    if(game.currentSecond % game.tiempoDeSpawn == 0 and game.secondPassed):
-        game.crearAsteroides(4)
+    if game.spawnedAsteroids < game.asteroidsPerLevel and game.secondPassed and game.currentSecond % game.tiempoDeSpawn == 0 :
+        game.crearAsteroides(game.asteroidsSpawning)
         game.secondPassed = False
+
+    if game.spawnedAsteroids == game.asteroidsPerLevel and len(game.asteroides) == 0:
+        #Pause times and realocate player
+        game.increaseLevel()
+
     FramePerSec.tick(FPS)
 
 
 
 #Estado del juego PENDIENTES
-    #Los meteoros cambian el target porque creo un nuevo player(ARREGLAR)
-    #Vida (Arreglar) Las vidas siguen siendo 3 porque al crear un nuevo jugador se resetean
-    #Niveles
     #Division de meteoros
     #Puntaje
     #Tipos de balas
+    #Upgrades
     #Imagenes
     #Centro con agujero negro
     #Fxs
