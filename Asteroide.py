@@ -2,13 +2,14 @@ import pygame
 from pygame.locals import *
 
 class Asteroide(pygame.sprite.Sprite): #Collider pendiente
-    def __init__(self,target):
+    def __init__(self,target,multiplier):
         super().__init__() #Constructor clase madre
+        self.multiplier = multiplier
 
         #Graficos
         self.color = (82, 45, 17)
         self.size = 20
-        self.surface = pygame.Surface((self.size, self.size))
+        self.surface = pygame.Surface((self.size*self.multiplier, self.size*self.multiplier))
         self.surface.fill(self.color)#Color
 
         #Logica
@@ -17,8 +18,10 @@ class Asteroide(pygame.sprite.Sprite): #Collider pendiente
         self.pos = pygame.Vector2(self.rect.x,self.rect.y)
         self.target = target
        
-    def dividirse():#Tamano aparece segun el nivel y se va encogiendo
-        pass
+
+
+    def dividirse(self):#Tamano aparece segun el nivel y se va encogiendo
+        print(self.groups())
 
     def moverse(self): #El asteroide tiene que moverse hacia el centro/jugador  Puede usarse un LERP
         if not self.rect.colliderect(self.target.rect):#Creo que puede cambiar a un proceso mas simple

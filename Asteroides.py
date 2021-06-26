@@ -52,6 +52,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 class GameManager:
     def __init__(self):
         self.jugador = Jugador()
+        self.asteroidSizeRules = {"G":{"Size":3,"Prob":0},"M":{"Size":2,"Prob":0}}
         self.asteroides = pygame.sprite.Group()
         self.jugadores = pygame.sprite.Group()
         self.text = pygame.sprite.Group()
@@ -83,6 +84,8 @@ class GameManager:
     def increaseLevel(self):
         self.asteroidsSpawning += 1
         self.currentLevel +=1
+        self.asteroidSizeRules["M"]["Prob"] += 10
+        self.asteroidSizeRules["G"]["Prob"] += 5
         if self.currentLevel % 5 == 0:  #If level == 5 then spawnTime decrease
             self.tiempoDeSpawn -= 1
         if self.currentLevel % 3 == 0:
@@ -107,11 +110,19 @@ class GameManager:
         else:
             return Vector2(WIDTH,random.randint(0, HEIGHT))
 
+    def asteroidMultiplier(self):
+        prob = random.randint(0,100)
+        if prob < self.asteroidSizeRules["G"]["Prob"]:
+            return self.asteroidSizeRules["G"]["Size"]
+        if prob < self.asteroidSizeRules["M"]["Prob"]:
+            return self.asteroidSizeRules["M"]["Size"]
+        return 1
+
     def crearAsteroides(self,cantidad):
         if self.spawnedAsteroids+cantidad > self.asteroidsPerLevel:
             cantidad = self.asteroidsPerLevel-self.spawnedAsteroids
         for i in range(cantidad):
-            ast = Asteroide(self.jugador)   #Si luego se quieren mas jugaores, podria seguir al vivo mas cercano
+            ast = Asteroide(self.jugador,self.asteroidMultiplier())   #Si luego se quieren mas jugaores, podria seguir al vivo mas cercano
             ast.setPos(self.getRandomPos())
             self.asteroides.add(ast)
             self.spawnedAsteroids += 1
@@ -180,7 +191,7 @@ while not game.gameOver:
 
 
     pygame.display.update()
-    #Tiempo
+    #Tiempo y spawn de asteroides todos estos se pueden hacer metodos del game Manager
     game.setSecond()
     if game.spawnedAsteroids < game.asteroidsPerLevel and game.secondPassed and game.currentSecond % game.tiempoDeSpawn == 0 :
         game.crearAsteroides(game.asteroidsSpawning)
