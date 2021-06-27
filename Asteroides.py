@@ -52,7 +52,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 class GameManager:
     def __init__(self):
         self.jugador = Jugador()
-        self.asteroidSizeRules = {"G":{"Size":3,"Prob":0},"M":{"Size":2,"Prob":0}}
+        self.asteroidSizeRules = {"G":{"Size":3,"Prob":60},"M":{"Size":2,"Prob":0}}
         self.asteroides = pygame.sprite.Group()
         self.jugadores = pygame.sprite.Group()
         self.text = pygame.sprite.Group()
@@ -161,7 +161,7 @@ while not game.gameOver:
     
     for event in pygame.event.get():
         if event.type == QUIT:
-            pygame.quit()
+            pygame.quit( )
 
 #Pintan en negro volver a cargar el fondo
     screen.fill((0,0,0))  
@@ -206,7 +206,6 @@ while not game.gameOver:
 
 
 #Estado del juego PENDIENTES
-    #Division de meteoros
     #Puntaje
     #Tipos de balas
     #Upgrades
