@@ -12,7 +12,7 @@ from Jugador import Jugador
 import pygame
 from pygame.locals import *
 import random
-
+#NUEVOS CAMBIOS
 #Clase creadora de textos
 class TextGen(pygame.sprite.Sprite):
     white = (255,255,255) 
